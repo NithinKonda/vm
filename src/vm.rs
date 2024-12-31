@@ -20,4 +20,10 @@ impl Machine {
         let pc = self.registers[Registers::PC];
         self.memory.read
     }
+
+    pub fn run(&mut self) -> Result<(), &'static str> {
+        loop {
+            self.step()?;
+        }
+    }
 }
