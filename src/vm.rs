@@ -15,4 +15,9 @@ impl Machine {
             memory : [0;5000],
         }
     }
+
+    pub fn step(&mut self) -> Result<(),&'static str> {
+        let pc = self.registers[Registers::PC];
+        self.memory.read
+    }
 }
