@@ -8,6 +8,19 @@ enum Registers {
 trait Addressable {
     fn read(addr : u16) -> Option<u8>;
     fn write(addr : u16, value : u8) -> bool;
+
+    fn read2(addr: u16) -> Option<u16> {
+
+    }
+
+    fn write2(addr: u16, value: u16) -> bool {
+
+    }
+
+
+    fn copy(from : u16, to : u16) -> bool {
+        
+    }
 }
 
 struct Machine {
