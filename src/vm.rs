@@ -3,6 +3,13 @@ enum Registers {
 }
 
 
+
+
+trait Addressable {
+    fn read(addr : u16) -> Option<u8>;
+    fn write(addr : u16, value : u8) -> bool;
+}
+
 struct Machine {
     registers : [u16; 8],
     memory : [u8; 5000],
