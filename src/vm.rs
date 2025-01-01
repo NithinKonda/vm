@@ -14,13 +14,13 @@ trait Addressable {
 
         if let Some(x0) = self.read(addr) {
             if let Some(x1) = self.read(addr+1) {
-                return (x0 as u16) | ((x1 as u16) << 8);
+                return Some((x0 as u16) | ((x1 as u16) << 8));
             } 
         };
         None
     }
 
-    fn write2(addr: u16, value: u16) -> bool {
+    fn write2(&self, addr: u16, value: u16) -> bool {
         let lower = value & 0xff;
         let upper = (value & 0xff00) >> 8;
 
@@ -28,7 +28,7 @@ trait Addressable {
     }
 
 
-    fn copy(from : u16, to : u16, n: usize) -> bool {
+    fn copy(&self, from : u16, to : u16, n: usize) -> bool {
         for i in 0..n {
             if let Some(x) = self.read(from+i) {
                 if !self.write(to+i, x) {
@@ -43,25 +43,25 @@ trait Addressable {
 
 struct Machine {
     registers : [u16; 8],
-    memory : [u8; 5000],
+    memory : dyn Addressable,
 }
+
+
+
 
 impl Machine {
     pub fn new() -> Self {
         Self {
-            register : [0;8],
-            memory : [0;5000],
+            registers : [0;8],
+            memory : LinearMemory::new(),
         }
+
     }
 
     pub fn step(&mut self) -> Result<(),&'static str> {
-        let pc = self.registers[Registers::PC];
-        self.memory.read
-    }
-
-    pub fn run(&mut self) -> Result<(), &'static str> {
-        loop {
-            self.step()?;
-        }
+        let pc = self.registers[Registers::PC as usize];
+        let instruction = self.memory.read2(pc).unwrap();
+        println!("Executing instruction {:04x} at address {:04x}", instruction, pc);
+        Ok(())
     }
 }
