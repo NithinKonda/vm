@@ -1,3 +1,5 @@
+mod vm;
+
 enum Registers {
     A,B,C,M,SP,PC,BP,FLAGS
 }
