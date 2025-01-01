@@ -41,6 +41,40 @@ trait Addressable {
     }
 }
 
+
+struct LinearMemory {
+    bytes : Vec<u8>,
+    size : usize,
+}
+
+
+impl LinearMemory {
+    pub fn new( n: usize) -> Self {
+        Self {
+            bytes : vec![0;n],
+            size : n,
+        }
+    }
+}
+
+
+impl Addressable for LinearMemory {
+    
+    fn read(&self, addr : u16) -> Option<u8> {
+        if addr as usize >= self.bytes.len() {
+            return None;
+        }
+        Some(self.bytes[addr as usize])
+    }
+    fn write(&mut self, addr : u16, value : u8) -> bool {
+        if addr as usize >= self.bytes.len() {
+            return false;
+        }
+        self.bytes[addr as usize] = value;
+        true
+    }
+}
+
 struct Machine {
     registers : [u16; 8],
     memory : dyn Addressable,
