@@ -78,7 +78,7 @@ impl Addressable for LinearMemory {
 
 struct Machine {
     registers : [u16; 8],
-    memory : dyn Addressable,
+    memory : Box<dyn Addressable>,
 }
 
 
@@ -88,7 +88,7 @@ impl Machine {
     pub fn new() -> Self {
         Self {
             registers : [0;8],
-            memory : LinearMemory::new(),
+            memory :Box::new(LinearMemory::new(8 * 1024)),
         }
 
     }
