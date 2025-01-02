@@ -5,7 +5,7 @@ pub enum Registers {
 
 #[repr(u8)]
 pub enum Op {
-    Nop,
+    Nop,Push,PopReg, AddStack, AddRegister,
 }
 
 
