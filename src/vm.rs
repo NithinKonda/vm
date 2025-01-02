@@ -1,9 +1,13 @@
 use crate::memory::{Addressable, LinearMemory};
-pub enum Registers {
+
+
+#[derive(Debug)]
+pub enum Register {
     A,B,C,M,SP,PC,BP,FLAGS
 }
 
 #[repr(u8)]
+#[derive(Debug)]
 pub enum Op {
     Nop,
     Push(u8),
@@ -15,10 +19,9 @@ pub enum Op {
 impl Op {
 
     pub fn value(&self) -> u8 {
-        unsafe {*<*const_>::from(self).cast::<u8>()}
+        
+        unsafe { *<*const _>::from(self).cast::<u8>() }
     }    
-
-
 }
 
 
@@ -30,10 +33,10 @@ pub struct Machine {
 
 
 
-fn parse_instruction(x:u16) -> Result<Instruction, String> {
+fn parse_instruction(x:u16) -> Result<Op, String> {
     let op = (x & 0xff) as u8;
     match op {
-        x if x == Op::Nop.value() as u8 =>  Ok(Instruction::Nop),
+         x if x == Op::Nop.value() as u8 =>  Ok(Op::Nop),
         _ =>  Err(format!("Unknown operator 0x{:X}", op)),
         
     }
@@ -51,15 +54,15 @@ impl Machine {
     }
 
     pub fn step(&mut self) -> Result<(), String> {
-        let pc = self.registers[Registers::PC as usize];
+        let pc = self.registers[Register::PC as usize];
         let instruction = self.memory.read2(pc).unwrap();
-        self.registers[Registers::PC as usize] = pc + 2;
+        self.registers[Register::PC as usize] = pc + 2;
 
 
-        let op = (instruction & 0xff) as u8;
+        let op = parse_instruction(instruction)?;
         match op {
-            x if x == Op::Nop as u8 =>  Ok(()),
-            _ =>  Err(format!("Unknown operator 0x{:X}", op)),
+            Op::Nop => Ok(()),
+            _ =>  Err(format!("Unknown operator {:?}", op)),
             
         }
 
