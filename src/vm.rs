@@ -27,6 +27,7 @@ impl Machine {
     pub fn step(&mut self) -> Result<(),&'static str> {
         let pc = self.registers[Registers::PC as usize];
         let instruction = self.memory.read2(pc).unwrap();
+        self.registers[Registers::PC as usize] = pc + 2;
         println!("Executing instruction {:04x} at address {:04x}", instruction, pc);
         Ok(())
     }
