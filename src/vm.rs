@@ -5,7 +5,20 @@ pub enum Registers {
 
 #[repr(u8)]
 pub enum Op {
-    Nop,Push,PopReg, AddStack, AddRegister,
+    Nop,
+    Push(u8),
+    PopReg(Register),
+    AddStack,
+    AddRegister(Register, Register),
+}
+
+impl Op {
+
+    pub fn value(&self) -> u8 {
+        unsafe {*<*const_>::from(self).cast::<u8>()}
+    }    
+
+
 }
 
 
@@ -15,6 +28,16 @@ pub struct Machine {
     pub memory : Box<dyn Addressable>,
 }
 
+
+
+fn parse_instruction(x:u16) -> Result<Instruction, String> {
+    let op = (x & 0xff) as u8;
+    match op {
+        x if x == Op::Nop.value() as u8 =>  Ok(Instruction::Nop),
+        _ =>  Err(format!("Unknown operator 0x{:X}", op)),
+        
+    }
+}
 
 
 
