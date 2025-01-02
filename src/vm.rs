@@ -1,12 +1,12 @@
 
-enum Registers {
+pub enum Registers {
     A,B,C,M,SP,PC,BP,FLAGS
 }
 
 
 
 
-trait Addressable {
+pub trait Addressable {
     fn read(&self, addr : u16) -> Option<u8>;
     fn write(&mut self, addr : u16, value : u8) -> bool;
 
@@ -43,7 +43,7 @@ trait Addressable {
 }
 
 
-struct LinearMemory {
+pub struct LinearMemory {
     bytes : Vec<u8>,
     size : usize,
 }
@@ -76,7 +76,7 @@ impl Addressable for LinearMemory {
     }
 }
 
-struct Machine {
+pub struct Machine {
     registers : [u16; 8],
     memory : Box<dyn Addressable>,
 }
