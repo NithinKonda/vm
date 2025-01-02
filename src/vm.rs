@@ -1,4 +1,4 @@
-
+use crate::memory::{Addressable, LinearMemory};
 pub enum Registers {
     A,B,C,M,SP,PC,BP,FLAGS
 }
