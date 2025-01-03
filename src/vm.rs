@@ -59,12 +59,17 @@ impl Machine {
 
 
 
-    pub fn pop(&mut self) -> Result<(),String> {
+    pub fn pop(&mut self) -> Result<u16,String> {
         
     }
 
     pub fn push(&mut self, v:u16) -> Result<(), String> {
-        
+        let sp = self.registers[Register::SP as usize];
+        if !self.memory.write(sp, v) {
+            return Err(format!("Failed to write value {:02x} to stack at address {:04x}", v, sp));
+        }
+        self.registers[Register::SP as usize] += 2;
+        Ok(())
     }
 
     pub fn step(&mut self) -> Result<(), String> {
