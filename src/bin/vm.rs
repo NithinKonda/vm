@@ -1,18 +1,22 @@
-use vm::vm::{Machine,Register};
+use vm::vm::{Machine, Register};
 
-pub fn main() -> Result<(),String> {
+pub fn main() -> Result<(), String> {
     let mut vm = Machine::new();
-    vm.memory.write(0, 0x01);
+    vm.memory.write(0, 0x1);
+    vm.memory.write(1, 10);
+    vm.memory.write(2, 0x1);
+    vm.memory.write(3, 6);
+    vm.memory.write(4, 0x3);
+    vm.memory.write(5, 0x2);
+    vm.memory.write(6, 0);
+
+
     vm.step()?;
     vm.step()?;
     vm.step()?;
     vm.step()?;
     vm.step()?;
 
-
-println!("A = {} ", vm.get_register(Register::A));
-Ok(())
-    
-
-
+    println!("A = {} ", vm.get_register(Register::A));
+    Ok(())
 }
