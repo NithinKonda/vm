@@ -1,3 +1,5 @@
+use std::fmt::format;
+
 use crate::memory::{Addressable, LinearMemory};
 
 #[repr(u8)]
@@ -57,6 +59,14 @@ fn parse_instruction(ins:u16) -> Result<Op, String> {
          x if x == Op::Push(0).value() => {
             let arg = (ins & 0xff00) >> 8;
             Ok(Op::Push(arg as u8))
+         },
+         x if x == Op::PopReg(Register::A).value() => {
+            let reg = (ins&0xff00) >> 8;
+            if let Some(r) = Register::from_u8(reg as u8) {
+                Ok(Op::PopReg(r))
+            } else {
+                Err(format!("unknown register 0x{:X}", reg))
+            }
          }
         _ =>  Err(format!("Unknown operator 0x{:X}", op)),
         
@@ -88,7 +98,7 @@ impl Machine {
 
     pub fn push(&mut self, v:u16) -> Result<(), String> {
         let sp = self.registers[Register::SP as usize];
-        if !self.memory.write(sp, v as u8) {
+        if !self.memory.write2(sp, v) {
             return Err(format!("Failed to write value {:02x} to stack at address {:04x}", v, sp));
         }
         self.registers[Register::SP as usize] += 2;
@@ -105,7 +115,7 @@ impl Machine {
         match op {
             Op::Nop => Ok(()),
             Op::Push(v) => {
-                self.push(v as u16)
+                self.push(v.into())
            },
 
             Op::PopReg(r) => {
