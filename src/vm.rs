@@ -71,7 +71,7 @@ impl Machine {
 
     pub fn push(&mut self, v:u16) -> Result<(), String> {
         let sp = self.registers[Register::SP as usize];
-        if !self.memory.write(sp, v) {
+        if !self.memory.write(sp, v as u8) {
             return Err(format!("Failed to write value {:02x} to stack at address {:04x}", v, sp));
         }
         self.registers[Register::SP as usize] += 2;
@@ -88,7 +88,7 @@ impl Machine {
         match op {
             Op::Nop => Ok(()),
             Op::Push(v) => {
-                self.push(v as u16)?;
+                self.push(v as u16)
            },
 
             Op::PopReg(r) => {
@@ -98,8 +98,15 @@ impl Machine {
                },
 
                 Op::AddStack => {
+                    let a = self.pop()?;
+                    let b = self.pop()?;
+                    self.push(a + b)
+                    
+                },
+                Op::AddRegister(r1, r2) => {
+                    self.registers[r1 as usize] += self.registers[r2 as usize];
+                   Ok(())
 
-                }
             }
             _ =>  Err(format!("Unknown operator {:?}", op)),
             
