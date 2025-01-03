@@ -84,7 +84,9 @@ impl Machine {
 
     }
 
-
+    pub fn get_register(&self, r:Register) -> u16 {
+        self.registers[r as usize]
+    }
 
     pub fn pop(&mut self) -> Result<u16,String> {
         let sp = self.registers[Register::SP as usize] - 2;
