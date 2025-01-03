@@ -57,6 +57,16 @@ impl Machine {
 
     }
 
+
+
+    pub fn pop(&mut self) -> Result<(),String> {
+        
+    }
+
+    pub fn push(&mut self, v:u16) -> Result<(), String> {
+        
+    }
+
     pub fn step(&mut self) -> Result<(), String> {
         let pc = self.registers[Register::PC as usize];
         let instruction = self.memory.read2(pc).unwrap();
@@ -83,6 +93,10 @@ impl Machine {
                 }
                 else {
                     Err(format!("Failed to read value from stack at address {:04x}", sp))
+                },
+
+                Op::AddStack => {
+
                 }
             }
             _ =>  Err(format!("Unknown operator {:?}", op)),
