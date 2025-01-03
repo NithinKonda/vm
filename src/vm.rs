@@ -33,10 +33,14 @@ pub struct Machine {
 
 
 
-fn parse_instruction(x:u16) -> Result<Op, String> {
-    let op = (x & 0xff) as u8;
+fn parse_instruction(ins:u16) -> Result<Op, String> {
+    let op = (ins & 0xff) as u8;
     match op {
          x if x == Op::Nop.value() as u8 =>  Ok(Op::Nop),
+         x if x == Op::Push(0).value() => {
+            let arg = (ins & 0xff00) >> 8;
+            Ok(Op::Push(arg as u8))
+         }
         _ =>  Err(format!("Unknown operator 0x{:X}", op)),
         
     }
@@ -62,6 +66,25 @@ impl Machine {
         let op = parse_instruction(instruction)?;
         match op {
             Op::Nop => Ok(()),
+            Op::Push(v) => {
+                let sp = self.registers[Register::SP as usize];
+                if !self.memory.write(sp, v) {
+                    return Err(format!("Failed to write value {:02x} to stack at address {:04x}", v, sp));
+                }
+                self.registers[Register::SP as usize] += 2;
+                Ok(())
+            },
+            Op::PopReg(r) => {
+                let sp = self.registers[Register::SP as usize] - 2;
+                if let Some(v) = self.memory.read2(sp) {
+                    self.registers[r as usize] = v;
+                    self.registers[Register::SP as usize] -= 2;
+                    Ok(())
+                }
+                else {
+                    Err(format!("Failed to read value from stack at address {:04x}", sp))
+                }
+            }
             _ =>  Err(format!("Unknown operator {:?}", op)),
             
         }
