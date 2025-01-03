@@ -1,4 +1,4 @@
-use vm::vm::Machine;
+use vm::vm::{Machine,Register};
 
 pub fn main() -> Result<(),String> {
     let mut vm = Machine::new();
@@ -7,7 +7,12 @@ pub fn main() -> Result<(),String> {
     vm.step()?;
     vm.step()?;
     vm.step()?;
-    vm.step()
+    vm.step()?;
+
+
+println!("A = {} ", vm.get_register(Register::A));
+Ok(())
+    
 
 
 }
