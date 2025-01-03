@@ -60,7 +60,13 @@ impl Machine {
 
 
     pub fn pop(&mut self) -> Result<u16,String> {
-        
+        let sp = self.registers[Register::SP as usize] - 2;
+                if let Some(v) = self.memory.read2(sp) {
+                    Ok(v)
+                }
+                else {
+                    Err(format!("Failed to read value from stack at address {:04x}", sp))
+                }
     }
 
     pub fn push(&mut self, v:u16) -> Result<(), String> {
@@ -82,23 +88,14 @@ impl Machine {
         match op {
             Op::Nop => Ok(()),
             Op::Push(v) => {
-                let sp = self.registers[Register::SP as usize];
-                if !self.memory.write(sp, v) {
-                    return Err(format!("Failed to write value {:02x} to stack at address {:04x}", v, sp));
-                }
-                self.registers[Register::SP as usize] += 2;
-                Ok(())
-            },
+                self.push(v as u16)?;
+           },
+
             Op::PopReg(r) => {
-                let sp = self.registers[Register::SP as usize] - 2;
-                if let Some(v) = self.memory.read2(sp) {
-                    self.registers[r as usize] = v;
-                    self.registers[Register::SP as usize] -= 2;
-                    Ok(())
-                }
-                else {
-                    Err(format!("Failed to read value from stack at address {:04x}", sp))
-                },
+                let value = self.pop()?;
+                self.registers[r as usize] = value;
+                Ok(())
+               },
 
                 Op::AddStack => {
 
