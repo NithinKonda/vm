@@ -1,4 +1,4 @@
-use std::fmt::format;
+
 
 use crate::memory::{Addressable, LinearMemory};
 
@@ -135,7 +135,7 @@ impl Machine {
                    Ok(())
 
             }
-            _ =>  Err(format!("Unknown operator {:?}", op)),
+            // _ =>  Err(format!("Unknown operator {:?}", op)),
             
         }
 
