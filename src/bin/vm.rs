@@ -5,10 +5,10 @@ pub fn main() -> Result<(), String> {
     vm.memory.write(0, 0x1);
     vm.memory.write(1, 10);
     vm.memory.write(2, 0x1);
-    vm.memory.write(3, 6);
+    vm.memory.write(3, 8);
     vm.memory.write(4, 0x3);
-    vm.memory.write(5, 0x2);
-    vm.memory.write(6, 0);
+    vm.memory.write(6, 0x2);
+    vm.memory.write(7, 0);
 
 
     vm.step()?;

@@ -94,6 +94,7 @@ impl Machine {
     pub fn pop(&mut self) -> Result<u16,String> {
         let sp = self.registers[Register::SP as usize] - 2;
                 if let Some(v) = self.memory.read2(sp) {
+                    self.registers[Register::SP as usize] -=2;
                     Ok(v)
                 }
                 else {
