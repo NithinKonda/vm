@@ -141,11 +141,8 @@ impl Machine {
                    Ok(())
 
             }
-            // _ =>  Err(format!("Unknown operator {:?}", op)),
             
         }
 
-        // println!("Executing instruction {:04x} at address {:04x}", instruction, pc);
-        // Ok(())
-    }
+   }
 }
