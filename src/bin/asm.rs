@@ -1,4 +1,4 @@
-use std::io;
+use std::io::{self, stderr, Write};
 use std::path::Path;
 use std::{env,  fs::File};
 
@@ -23,6 +23,8 @@ fn main() {
         }
     }
 
-    
+    let mut stdout = io::stdout().lock();
+    stdout.write_all(&output);
+    Ok(())    
 
 }
