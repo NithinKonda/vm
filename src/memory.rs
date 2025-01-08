@@ -33,6 +33,17 @@ pub trait Addressable {
         }    
         true    
     }
+
+
+
+    fn load_from_vec(&mut self, from: Vec<u8>, addr , u16) -> bool {
+        for (i,b) in from.enumerate() {
+            if !self.write(addr+i,b) {
+                return false;
+            }
+        };
+        true
+    }
 }
 
 

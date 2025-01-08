@@ -14,10 +14,6 @@ pub fn main() -> Result<(), String> {
     let reader = BufReader::new(file);
     let mut program: Vec<u8> = Vec::new();
     reader.read_to_end(program);
-
-
-
-    let mut vm = Machine::new();
     vm.step()?;
     vm.step()?;
     vm.step()?;
