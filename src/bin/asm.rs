@@ -9,7 +9,7 @@ fn main() -> Result<(), String> {
         panic!("usage : {} <input> ", args[0]);
     }
 
-    let input_file = &args[1];
+    let _input_file = &args[1];
 
     let file = File::open(Path::new(&args[1])).map_err(|x| format!("failed to open : {}",x))?; 
 
