@@ -71,7 +71,7 @@ fn parse_instruction(ins:u16) -> Result<Op, String> {
          x if x == Op::AddStack.value() => {
             Ok(Op::AddStack)
          }
-        _ =>  Err(format!("Unknown operator 0x{:X}", op)),
+        _ =>  Err(format!("Unknown operatorrrr 0x{:X}", op)),
         
     }
 }
