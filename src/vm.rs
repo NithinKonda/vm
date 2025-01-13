@@ -154,8 +154,8 @@ impl Machine {
                    Ok(())
 
             }
-            Op::Signal((signal)) => {
-                let sig_fn = self.signal_handler.get(signal).ok_or(format!("Unknown signal {}", signal))?;
+            Op::Signal(signal) => {
+                let sig_fn = self.signal_handler.get(&signal).ok_or(format!("Unknown signal {}", signal))?;
                 sig_fn(self)
             },
             
