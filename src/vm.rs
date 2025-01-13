@@ -48,16 +48,25 @@ impl Op {
 
 
 
-pub type SignalFunction = fn(&mut Machine) -> Result<(),String>;
+type SignalFunction = fn(&mut Machine) -> Result<(),String>;
 
 pub struct Machine {
     registers : [u16; 8],
-    halt : bool,
+    pub halt : bool,
     signal_handler : HashMap<u8, SignalFunction>,
     pub memory : Box<dyn Addressable>,
 }
 
 
+
+
+    /// Given an instruction, returns the argument portion of the instruction.
+    ///
+    /// This is the top 8 bits of the instruction, shifted right by 8 bits so that
+    /// they are in the lower 8 bits, and then cast to a u8.
+    ///
+    /// This is used by many of the parse functions to extract the argument from an
+    /// instruction.
 
 fn parse_instruction_arg(ins: u16) -> u8 {
 ((ins & 0xff00) >> 8) as u8
@@ -134,7 +143,7 @@ pub fn define_handler(&mut self, index:u8, f: SignalFunction) {
 
     pub fn step(&mut self) -> Result<(), String> {
         let pc = self.registers[Register::PC as usize];
-        let instruction = self.memory.read2(pc).unwrap();
+        let instruction = self.memory.read2(pc).ok_or(format!("Failed to read instruction at address 0x{:X}", pc))?;
         self.registers[Register::PC as usize] = pc + 2;
 
 
