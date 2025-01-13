@@ -48,10 +48,11 @@ impl Op {
 
 
 
-type SignalFunction = fn(&mut Machine) -> Result<(),String>;
+pub type SignalFunction = fn(&mut Machine) -> Result<(),String>;
 
 pub struct Machine {
     registers : [u16; 8],
+    halt : bool,
     signal_handler : HashMap<u8, SignalFunction>,
     pub memory : Box<dyn Addressable>,
 }
@@ -94,6 +95,7 @@ impl Machine {
     pub fn new() -> Self {
         Self {
             registers : [0;8],
+            halt:false,
             signal_handler : HashMap::new(),
             memory :Box::new(LinearMemory::new(8 * 1024)),
         }
@@ -103,6 +105,12 @@ impl Machine {
     pub fn get_register(&self, r:Register) -> u16 {
         self.registers[r as usize]
     }
+
+
+
+pub fn define_handler(&mut self, index:u8, f: SignalFunction) {
+    self.signal_handler.insert(index,f);
+}
 
     pub fn pop(&mut self) -> Result<u16,String> {
         let sp = self.registers[Register::SP as usize] - 2;

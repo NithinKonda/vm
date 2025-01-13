@@ -3,8 +3,13 @@ use std::io::{BufReader, Read};
 use std::path::Path;
 use std::fs::File;
 use std::io::{Seek, SeekFrom};
-use vm::vm::{Machine, Register};
+use vm::vm::{Machine, Register,SignalFunction};
 
+
+
+fn signal_halt(vm: &mut Machine) -> Result<(),String> {
+    
+}
 
 pub fn main() -> Result<(), String> {
     let args: Vec<_> = env::args().collect();
