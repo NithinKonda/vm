@@ -17,20 +17,13 @@ fn main() -> Result<(), String> {
 
 
     let mut output: Vec<u8> = Vec::new();
-    // for line in BufReader::new(file).lines() {
-    //     let line_inner = line.map_err(|x | format!("failed to read line : {}",x) )?;
-    //     for t in line_inner.split(" ").filter(|x| x.len() > 0) {
-    //         let b = u8 ::from_str_radix(t,16).map_err(|x| format!("failed to parse : {}",x))?;
-    //         output.push(b);
-    //     }
-    // }
-
-
-    let r: Result<Vec<u8>, String> = BufReader::new(file).lines().map(
-        |x| x.map_err(|e| format!("foo:{}",e).map(
-            |line| line.split(" ").filter(|x| x.len() > 0).map(
-                |t| u8::from_str_radix(t,16).map_err(|x| format!("failed to parse : {}",x)
-            ).into_iter().collect())
+    for line in BufReader::new(file).lines() {
+        let line_inner = line.map_err(|x | format!("failed to read line : {}",x) )?;
+        for t in line_inner.split(" ").filter(|x| x.len() > 0) {
+            let b = u8 ::from_str_radix(t,16).map_err(|x| format!("failed to parse : {}",x))?;
+            output.push(b);
+        }
+    }
 
 
     let mut stdout = io::stdout().lock();
