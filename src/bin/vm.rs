@@ -38,7 +38,7 @@ pub fn main() -> Result<(), String> {
 
 
     let mut vm = Machine::new();
-    vm.define_handler(0x90, signal_halt);
+    vm.define_handler(0xf0, signal_halt);
     vm.memory.load_from_vec(program, 0);
     while !vm.halt {
 
