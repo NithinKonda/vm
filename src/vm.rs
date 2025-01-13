@@ -1,6 +1,7 @@
 
 
 use crate::memory::{Addressable, LinearMemory};
+use std::collections::HashMap;
 
 #[repr(u8)]
 #[derive(Debug)]
@@ -46,15 +47,19 @@ impl Op {
 
 
 
+
+type SignalFunction = fn(&mut Machine) -> Result<(),String>;
+
 pub struct Machine {
     registers : [u16; 8],
+    signal_handler : HashMap<u8, SignalFunction>,
     pub memory : Box<dyn Addressable>,
 }
 
 
 
 fn parse_instruction_arg(ins: u16) -> u8 {
-
+((ins & 0xff00) >> 8) as u8
 }
 
 
@@ -89,6 +94,7 @@ impl Machine {
     pub fn new() -> Self {
         Self {
             registers : [0;8],
+            signal_handler : HashMap::new(),
             memory :Box::new(LinearMemory::new(8 * 1024)),
         }
 
@@ -148,6 +154,10 @@ impl Machine {
                    Ok(())
 
             }
+            Op::Signal((signal)) => {
+                let sig_fn = self.signal_handler.get(signal).ok_or(format!("Unknown signal {}", signal))?;
+                sig_fn(self)
+            },
             
         }
 
