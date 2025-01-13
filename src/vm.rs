@@ -75,7 +75,8 @@ fn parse_instruction(ins:u16) -> Result<Op, String> {
             Ok(Op::AddStack)
          }
          x if x == Op::Signal(0).value() => {
-            let arg = ins,
+            let arg = parse_instruction_arg(ins);
+            Ok(Op::Signal(arg))
          }
         _ =>  Err(format!("Unknown operatorrrr 0x{:X}", op)),
         
