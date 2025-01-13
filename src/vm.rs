@@ -33,6 +33,7 @@ pub enum Op {
     PopReg(Register),
     AddStack,
     AddRegister(Register, Register),
+    Signal(u8),
 }
 
 impl Op {
@@ -52,12 +53,17 @@ pub struct Machine {
 
 
 
+fn parse_instruction_arg(ins: u16) -> u8 {
+
+}
+
+
 fn parse_instruction(ins:u16) -> Result<Op, String> {
     let op = (ins & 0xff) as u8;
     match op {
          x if x == Op::Nop.value() as u8 =>  Ok(Op::Nop),
          x if x == Op::Push(0).value() => {
-            let arg = (ins & 0xff00) >> 8;
+            let arg = parse_instruction_arg(ins);
             Ok(Op::Push(arg as u8))
          },
          x if x == Op::PopReg(Register::A).value() => {
@@ -67,6 +73,9 @@ fn parse_instruction(ins:u16) -> Result<Op, String> {
             .map(|r| Op::PopReg(r))        }
          x if x == Op::AddStack.value() => {
             Ok(Op::AddStack)
+         }
+         x if x == Op::Signal(0).value() => {
+            let arg = ins,
          }
         _ =>  Err(format!("Unknown operatorrrr 0x{:X}", op)),
         
